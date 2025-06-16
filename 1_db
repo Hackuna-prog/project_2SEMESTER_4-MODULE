@@ -1,0 +1,28 @@
+#!/bin/sh
+
+PASS_ADMIN=VeryStrongSuperPassword
+PASS_USER=12345
+
+HASH_ADMIN=$(echo -n $PASS_ADMIN | openssl sha256 -hex -r |sed "s/\\s.*\$//")
+HASH_USER=$(echo -n $PASS_USER | openssl sha256 -hex -r |sed "s/\\s.*\$//")
+
+sudo -u postgres psql -U postgres -A -H -q << __ENDSQL
+-- удалим таблицу users, если она создана
+DROP TABLE IF EXISTS users;
+
+-- удалим пользователя u (если он создан), а затем создадим его
+DROP ROLE IF EXISTS u;
+CREATE ROLE u WITH LOGIN PASSWORD '1234567';
+
+-- создадим таблицу пользователей
+CREATE TABLE users (login TEXT, password TEXT, name TEXT);
+INSERT INTO users (login, password, name) VALUES ('admin', '$HASH_ADMIN', 'Super Administrator');
+INSERT INTO users (login, password, name) VALUES ('tanya', '$HASH_USER', 'Tanya Khafizova');
+
+-- дадим права пользователю u на созданную таблицу
+GRANT ALL ON users TO u;
+__ENDSQL
+
+systemctl restart postgresql
+
+echo "База данных PostrgeSQL подготовлена"

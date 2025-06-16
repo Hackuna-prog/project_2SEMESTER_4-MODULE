@@ -1,0 +1,206 @@
+\hypertarget{mod__appfilter_8cpp}{}\doxysection{mod\+\_\+appfilter.\+cpp File Reference}
+\label{mod__appfilter_8cpp}\index{mod\_appfilter.cpp@{mod\_appfilter.cpp}}
+
+
+Apache модуль, который блокирует sql инъекции, используя сигнатурный метод выявления атак.  
+
+
+{\ttfamily \#include \char`\"{}httpd.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}http\+\_\+config.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}http\+\_\+protocol.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}http\+\_\+log.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}http\+\_\+request.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}ap\+\_\+config.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}apr\+\_\+dbd.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}apr\+\_\+strings.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}mod\+\_\+dbd.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}apreq.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}apreq\+\_\+parser.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}apreq\+\_\+param.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}apreq\+\_\+util.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}openssl/sha.\+h\char`\"{}}\newline
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structconfig__t}{config\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em Alias типа структуры со списком плохих строк. В данном случае \textquotesingle{} и \%27. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+static const char $\ast$ \mbox{\hyperlink{mod__appfilter_8cpp_afae0a925144984b0be61312de69f6acd}{option\+\_\+enable}} (cmd\+\_\+parms $\ast$cmd, void $\ast$doof, const char $\ast$value)
+\begin{DoxyCompactList}\small\item\em Обработчик опции appfilter\+\_\+enable конфигурационного файла Apache. \end{DoxyCompactList}\item 
+static const char $\ast$ \mbox{\hyperlink{mod__appfilter_8cpp_aeb004931a8096bc600617186823930c3}{option\+\_\+str}} (cmd\+\_\+parms $\ast$cmd, void $\ast$doof, const char $\ast$value)
+\begin{DoxyCompactList}\small\item\em Обработчик опции appfilter\+\_\+str конфигурационного файла Apache. \end{DoxyCompactList}\item 
+static int \mbox{\hyperlink{mod__appfilter_8cpp_a52dedae378fd1ead1e77666a03d34992}{input\+\_\+fixup}} (request\+\_\+rec $\ast$r)
+\begin{DoxyCompactList}\small\item\em Фильтр входного запроса. \end{DoxyCompactList}\item 
+static void $\ast$ \mbox{\hyperlink{mod__appfilter_8cpp_a07c1a0e25f3655c0459442bf55cdd424}{create\+\_\+server\+\_\+conf}} (apr\+\_\+pool\+\_\+t $\ast$pool, server\+\_\+rec $\ast$s)
+\begin{DoxyCompactList}\small\item\em Функция выделяет память для хранения параметров модуля, указанных в httpd.\+conf. В данном примере есть 3 параметра\+: \end{DoxyCompactList}\item 
+static void \mbox{\hyperlink{mod__appfilter_8cpp_a35e2328ac302481184f3af0a7abeb66b}{appfilter\+\_\+register\+\_\+hooks}} (apr\+\_\+pool\+\_\+t $\ast$p)
+\begin{DoxyCompactList}\small\item\em Функция регистрации обработчиков модуля-\/фильтра SQL запросов. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{mod__appfilter_8cpp_a81b142e63377b8bfd46b5ba8aef58238}{AP\+\_\+\+DECLARE\+\_\+\+MODULE}} (appfilter)
+\begin{DoxyCompactList}\small\item\em Функция определения модуля mod\+\_\+appfilter.\+so. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+module AP\+\_\+\+MODULE\+\_\+\+DECLARE\+\_\+\+DATA \mbox{\hyperlink{mod__appfilter_8cpp_a155bb7ae4147c19ee2adf5714e82a1ab}{appfilter\+\_\+module}}
+\begin{DoxyCompactList}\small\item\em Объявление модуля \end{DoxyCompactList}\item 
+static const command\+\_\+rec \mbox{\hyperlink{mod__appfilter_8cpp_a98b39b31336383f63908d803b14b4c73}{appfilter\+\_\+options}} \mbox{[}$\,$\mbox{]}
+\begin{DoxyCompactList}\small\item\em Функция которая задает опции обработчику. Первая опция -\/ включить/отключить модуль \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Apache модуль, который блокирует sql инъекции, используя сигнатурный метод выявления атак. 
+
+Модуль можно включать и отключать в конфигурационных настройках Apache в файле httpd.\+conf.
+
+Также в настройках можно указывать сигнатуры для определения SQL инъекций.
+
+Данная программа работает с Postgresql в качестве базы данных о запросах пользователей. 
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{mod__appfilter_8cpp_a81b142e63377b8bfd46b5ba8aef58238}\label{mod__appfilter_8cpp_a81b142e63377b8bfd46b5ba8aef58238}} 
+\index{mod\_appfilter.cpp@{mod\_appfilter.cpp}!AP\_DECLARE\_MODULE@{AP\_DECLARE\_MODULE}}
+\index{AP\_DECLARE\_MODULE@{AP\_DECLARE\_MODULE}!mod\_appfilter.cpp@{mod\_appfilter.cpp}}
+\doxysubsubsection{\texorpdfstring{AP\_DECLARE\_MODULE()}{AP\_DECLARE\_MODULE()}}
+{\footnotesize\ttfamily AP\+\_\+\+DECLARE\+\_\+\+MODULE (\begin{DoxyParamCaption}\item[{appfilter}]{ }\end{DoxyParamCaption})}
+
+
+
+Функция определения модуля mod\+\_\+appfilter.\+so. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em create\+\_\+server\+\_\+conf} & память для хранения параметров модуля \\
+\hline
+{\em appfilter\+\_\+options} & опции модуля \\
+\hline
+{\em appfilter\+\_\+register\+\_\+hooks} & фильтр модуля \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{mod__appfilter_8cpp_a35e2328ac302481184f3af0a7abeb66b}\label{mod__appfilter_8cpp_a35e2328ac302481184f3af0a7abeb66b}} 
+\index{mod\_appfilter.cpp@{mod\_appfilter.cpp}!appfilter\_register\_hooks@{appfilter\_register\_hooks}}
+\index{appfilter\_register\_hooks@{appfilter\_register\_hooks}!mod\_appfilter.cpp@{mod\_appfilter.cpp}}
+\doxysubsubsection{\texorpdfstring{appfilter\_register\_hooks()}{appfilter\_register\_hooks()}}
+{\footnotesize\ttfamily static void appfilter\+\_\+register\+\_\+hooks (\begin{DoxyParamCaption}\item[{apr\+\_\+pool\+\_\+t $\ast$}]{p }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Функция регистрации обработчиков модуля-\/фильтра SQL запросов. 
+
+\mbox{\Hypertarget{mod__appfilter_8cpp_a07c1a0e25f3655c0459442bf55cdd424}\label{mod__appfilter_8cpp_a07c1a0e25f3655c0459442bf55cdd424}} 
+\index{mod\_appfilter.cpp@{mod\_appfilter.cpp}!create\_server\_conf@{create\_server\_conf}}
+\index{create\_server\_conf@{create\_server\_conf}!mod\_appfilter.cpp@{mod\_appfilter.cpp}}
+\doxysubsubsection{\texorpdfstring{create\_server\_conf()}{create\_server\_conf()}}
+{\footnotesize\ttfamily static void $\ast$ create\+\_\+server\+\_\+conf (\begin{DoxyParamCaption}\item[{apr\+\_\+pool\+\_\+t $\ast$}]{pool,  }\item[{server\+\_\+rec $\ast$}]{s }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Функция выделяет память для хранения параметров модуля, указанных в httpd.\+conf. В данном примере есть 3 параметра\+: 
+
+appfilter\+\_\+enable true
+
+appfilter\+\_\+str \char`\"{}\textquotesingle{}\char`\"{}
+
+appfilter\+\_\+str \char`\"{}\%27\char`\"{} \mbox{\Hypertarget{mod__appfilter_8cpp_a52dedae378fd1ead1e77666a03d34992}\label{mod__appfilter_8cpp_a52dedae378fd1ead1e77666a03d34992}} 
+\index{mod\_appfilter.cpp@{mod\_appfilter.cpp}!input\_fixup@{input\_fixup}}
+\index{input\_fixup@{input\_fixup}!mod\_appfilter.cpp@{mod\_appfilter.cpp}}
+\doxysubsubsection{\texorpdfstring{input\_fixup()}{input\_fixup()}}
+{\footnotesize\ttfamily static int input\+\_\+fixup (\begin{DoxyParamCaption}\item[{request\+\_\+rec $\ast$}]{r }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Фильтр входного запроса. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em $\ast$r} & структура URL-\/запросов. Функция проверяет статус включенного модуля и наличие сигнатур.\\
+\hline
+\end{DoxyParams}
+Затем ищет вхождения сигнатур в запросы, если находит, возвращает 403 ошибку.
+
+\begin{DoxyReturn}{Returns}
+статус OK -\/ успешное соединение, если не удалось -\/ внутренняя ошибка сервера. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{mod__appfilter_8cpp_afae0a925144984b0be61312de69f6acd}\label{mod__appfilter_8cpp_afae0a925144984b0be61312de69f6acd}} 
+\index{mod\_appfilter.cpp@{mod\_appfilter.cpp}!option\_enable@{option\_enable}}
+\index{option\_enable@{option\_enable}!mod\_appfilter.cpp@{mod\_appfilter.cpp}}
+\doxysubsubsection{\texorpdfstring{option\_enable()}{option\_enable()}}
+{\footnotesize\ttfamily static const char $\ast$ option\+\_\+enable (\begin{DoxyParamCaption}\item[{cmd\+\_\+parms $\ast$}]{cmd,  }\item[{void $\ast$}]{doof,  }\item[{const char $\ast$}]{value }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Обработчик опции appfilter\+\_\+enable конфигурационного файла Apache. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em $\ast$cmd} & отвечает за местоположение директивы, нужно вне $<$\+Directory$>$ \\
+\hline
+{\em $\ast$doof} & не нужен, но должен быть прописан \\
+\hline
+{\em $\ast$value} & принимает на вход значение value , указанное в файле httpd.\+conf Опции модуля должны быть прописаны в файле httpd.\+conf вне $<$\+Directory$>$ и принимать значения только true либо false \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+error или NULL 
+\end{DoxyReturn}
+\mbox{\Hypertarget{mod__appfilter_8cpp_aeb004931a8096bc600617186823930c3}\label{mod__appfilter_8cpp_aeb004931a8096bc600617186823930c3}} 
+\index{mod\_appfilter.cpp@{mod\_appfilter.cpp}!option\_str@{option\_str}}
+\index{option\_str@{option\_str}!mod\_appfilter.cpp@{mod\_appfilter.cpp}}
+\doxysubsubsection{\texorpdfstring{option\_str()}{option\_str()}}
+{\footnotesize\ttfamily static const char $\ast$ option\+\_\+str (\begin{DoxyParamCaption}\item[{cmd\+\_\+parms $\ast$}]{cmd,  }\item[{void $\ast$}]{doof,  }\item[{const char $\ast$}]{value }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Обработчик опции appfilter\+\_\+str конфигурационного файла Apache. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em $\ast$cmd} & отвечает за местоположение директивы, нужно вне $<$\+Directory$>$ \\
+\hline
+{\em $\ast$doof} & не нужен, но должен быть указан \\
+\hline
+{\em $\ast$value} & принимает на вход значение value , указанное в файле httpd.\+conf Функция добавляет указанные в конфигурации сигнатуры в структуру config \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+error или NULL 
+\end{DoxyReturn}
+
+
+\doxysubsection{Variable Documentation}
+\mbox{\Hypertarget{mod__appfilter_8cpp_a155bb7ae4147c19ee2adf5714e82a1ab}\label{mod__appfilter_8cpp_a155bb7ae4147c19ee2adf5714e82a1ab}} 
+\index{mod\_appfilter.cpp@{mod\_appfilter.cpp}!appfilter\_module@{appfilter\_module}}
+\index{appfilter\_module@{appfilter\_module}!mod\_appfilter.cpp@{mod\_appfilter.cpp}}
+\doxysubsubsection{\texorpdfstring{appfilter\_module}{appfilter\_module}}
+{\footnotesize\ttfamily module AP\+\_\+\+MODULE\+\_\+\+DECLARE\+\_\+\+DATA appfilter\+\_\+module}
+
+
+
+Объявление модуля 
+
+\mbox{\Hypertarget{mod__appfilter_8cpp_a98b39b31336383f63908d803b14b4c73}\label{mod__appfilter_8cpp_a98b39b31336383f63908d803b14b4c73}} 
+\index{mod\_appfilter.cpp@{mod\_appfilter.cpp}!appfilter\_options@{appfilter\_options}}
+\index{appfilter\_options@{appfilter\_options}!mod\_appfilter.cpp@{mod\_appfilter.cpp}}
+\doxysubsubsection{\texorpdfstring{appfilter\_options}{appfilter\_options}}
+{\footnotesize\ttfamily const command\+\_\+rec appfilter\+\_\+options\mbox{[}$\,$\mbox{]}\hspace{0.3cm}{\ttfamily [static]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{=}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ }
+\DoxyCodeLine{\ \ }
+\DoxyCodeLine{\ \ }
+\DoxyCodeLine{\ \ }
+\DoxyCodeLine{\ \ }
+\DoxyCodeLine{\ \ AP\_INIT\_TAKE1(\textcolor{stringliteral}{"{}appfilter\_enable"{}},\ \mbox{\hyperlink{mod__appfilter_8cpp_afae0a925144984b0be61312de69f6acd}{option\_enable}},\ NULL,\ RSRC\_CONF,\ \textcolor{stringliteral}{"{}Enable/disable\ filtering"{}}),}
+\DoxyCodeLine{\ \ AP\_INIT\_TAKE1(\textcolor{stringliteral}{"{}appfilter\_str"{}},\ \mbox{\hyperlink{mod__appfilter_8cpp_aeb004931a8096bc600617186823930c3}{option\_str}},\ NULL,\ RSRC\_CONF,\ \textcolor{stringliteral}{"{}String\ to\ filter"{}}),}
+\DoxyCodeLine{\ \ \{NULL\}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+Функция которая задает опции обработчику. Первая опция -\/ включить/отключить модуль 
+
+Вторая опция -\/ добавление сигнутур в файле конфигурации 

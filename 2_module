@@ -1,0 +1,20 @@
+#!/bin/bash
+
+#dnf install apr-util-pgsql httpd-devel libapreq2-devel openssl-devel
+
+LIBS="-lapr-1 -laprutil-1 -lapreq2 -lcrypto"
+
+g++ $LIBS -I/usr/include/httpd -I/usr/include/apr-1 -I/usr/include/apreq2 -fpermissive -w -fPIC -DPIC -c mod_app.cpp || exit $?
+apxs -i -n app_module -c mod_app.o $LIBS || exit $?
+
+g++ $LIBS -I/usr/include/httpd -I/usr/include/apr-1 -I/usr/include/apreq2 -fpermissive -w -fPIC -DPIC -c mod_appfilter.cpp || exit $?
+apxs -i -n f_module -c mod_appfilter.o $LIBS || exit $?
+
+# Устанавливаем конфигурационный файл Apache
+install -o root -g root -m 0644 httpd.conf /etc/httpd/conf
+# Устанавливаем .html файлы интерфейса
+install -o root -g root -m 0644 index.html forbidden.html /var/www/html
+
+systemctl restart httpd
+
+echo "Apache подготовлен"

@@ -1,0 +1,250 @@
+\hypertarget{mod__app_8cpp}{}\doxysection{mod\+\_\+app.\+cpp File Reference}
+\label{mod__app_8cpp}\index{mod\_app.cpp@{mod\_app.cpp}}
+
+
+Apache модуль авторизации пользователя в системе.  
+
+
+{\ttfamily \#include \char`\"{}httpd.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}http\+\_\+config.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}http\+\_\+protocol.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}http\+\_\+log.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}ap\+\_\+config.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}apr\+\_\+dbd.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}apr\+\_\+strings.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}mod\+\_\+dbd.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}apreq.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}apreq\+\_\+parser.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}apreq\+\_\+param.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}apreq\+\_\+util.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}openssl/sha.\+h\char`\"{}}\newline
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{mod__app_8cpp_a8f73b49fa31b4ac94794f1b7f9d31fc8}{CONTENT\+\_\+\+TYPE\+\_\+\+URLENCODED}}~\char`\"{}application/x-\/www-\/form-\/urlencoded\char`\"{}
+\begin{DoxyCompactList}\small\item\em Макрос, определяющий тип кодировки URL. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+static \mbox{\hyperlink{mod__app_8cpp_a8143f87346b66b10cabd9b7a0c49fc30}{APR\+\_\+\+OPTIONAL\+\_\+\+FN\+\_\+\+TYPE}} (ap\+\_\+dbd\+\_\+acquire) $\ast$mod\+\_\+dbd\+\_\+acquire\+\_\+fn
+\begin{DoxyCompactList}\small\item\em Cтатическое определение типа данных опциональной библиотеки для работы с Postgresql. \end{DoxyCompactList}\item 
+static int \mbox{\hyperlink{mod__app_8cpp_a6592b770933d679355f806a9f4814268}{app\+\_\+handler}} (request\+\_\+rec $\ast$r)
+\begin{DoxyCompactList}\small\item\em Определение функции обработчика HTTP-\/запросов. \end{DoxyCompactList}\item 
+apr\+\_\+status\+\_\+t \mbox{\hyperlink{mod__app_8cpp_a867ddf562411f02d27df8e5ed986df81}{get\+\_\+params}} (request\+\_\+rec $\ast$r, apr\+\_\+table\+\_\+t $\ast$params)
+\begin{DoxyCompactList}\small\item\em Функция парсинга. \end{DoxyCompactList}\item 
+apr\+\_\+status\+\_\+t \mbox{\hyperlink{mod__app_8cpp_acabac405752166ddf1078798056270e7}{sha256}} (apr\+\_\+pool\+\_\+t $\ast$pool, const char $\ast$str, char $\ast$$\ast$result)
+\begin{DoxyCompactList}\small\item\em Функция преобразования пароля в хеш. \end{DoxyCompactList}\item 
+static int \mbox{\hyperlink{mod__app_8cpp_a834d21bce64c6d93e6e29ac2474055f6}{app\+\_\+post\+\_\+config}} (apr\+\_\+pool\+\_\+t $\ast$pconf, apr\+\_\+pool\+\_\+t $\ast$plog, apr\+\_\+pool\+\_\+t $\ast$ptemp, server\+\_\+rec $\ast$s)
+\begin{DoxyCompactList}\small\item\em Функция получения статуса соединения с продолжительностью = времени жизни запроса. \end{DoxyCompactList}\item 
+static void \mbox{\hyperlink{mod__app_8cpp_ab6c902d0877356c9f3553647225e6634}{app\+\_\+register\+\_\+hooks}} (apr\+\_\+pool\+\_\+t $\ast$p)
+\begin{DoxyCompactList}\small\item\em Функция регистрации обработчиков модуля mod\+\_\+app.\+so. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{mod__app_8cpp_a8ae0842fd2698de001d49badbc9e17c0}{AP\+\_\+\+DECLARE\+\_\+\+MODULE}} (app)
+\begin{DoxyCompactList}\small\item\em Функция определения модуля mod\+\_\+app.\+so. \end{DoxyCompactList}\item 
+apr\+\_\+status\+\_\+t \mbox{\hyperlink{mod__app_8cpp_a34f83dde928ba927fe6b023ae6b37b82}{dbd\+\_\+select}} (request\+\_\+rec $\ast$r, ap\+\_\+dbd\+\_\+t $\ast$dbd, apr\+\_\+dbd\+\_\+results\+\_\+t $\ast$$\ast$res, const char $\ast$sql)
+\begin{DoxyCompactList}\small\item\em Функция отправки SQL-\/запроса в базу данных. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Apache модуль авторизации пользователя в системе. 
+
+Данная программа парсит полученные данные\+: логин + пароль в виде sha хэша;
+
+проверяет логин и пароль на корректность;
+
+работает с postgres sql;
+
+формирует страницу html и отправляет её Apache. 
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{mod__app_8cpp_a8f73b49fa31b4ac94794f1b7f9d31fc8}\label{mod__app_8cpp_a8f73b49fa31b4ac94794f1b7f9d31fc8}} 
+\index{mod\_app.cpp@{mod\_app.cpp}!CONTENT\_TYPE\_URLENCODED@{CONTENT\_TYPE\_URLENCODED}}
+\index{CONTENT\_TYPE\_URLENCODED@{CONTENT\_TYPE\_URLENCODED}!mod\_app.cpp@{mod\_app.cpp}}
+\doxysubsubsection{\texorpdfstring{CONTENT\_TYPE\_URLENCODED}{CONTENT\_TYPE\_URLENCODED}}
+{\footnotesize\ttfamily \#define CONTENT\+\_\+\+TYPE\+\_\+\+URLENCODED~\char`\"{}application/x-\/www-\/form-\/urlencoded\char`\"{}}
+
+
+
+Макрос, определяющий тип кодировки URL. 
+
+Кодировка \char`\"{}application/x-\/www-\/form-\/urlencoded\char`\"{} происходит в формате ключ=значение.
+
+Например, login=smith\&password=12345678 
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{mod__app_8cpp_a8ae0842fd2698de001d49badbc9e17c0}\label{mod__app_8cpp_a8ae0842fd2698de001d49badbc9e17c0}} 
+\index{mod\_app.cpp@{mod\_app.cpp}!AP\_DECLARE\_MODULE@{AP\_DECLARE\_MODULE}}
+\index{AP\_DECLARE\_MODULE@{AP\_DECLARE\_MODULE}!mod\_app.cpp@{mod\_app.cpp}}
+\doxysubsubsection{\texorpdfstring{AP\_DECLARE\_MODULE()}{AP\_DECLARE\_MODULE()}}
+{\footnotesize\ttfamily AP\+\_\+\+DECLARE\+\_\+\+MODULE (\begin{DoxyParamCaption}\item[{app}]{ }\end{DoxyParamCaption})}
+
+
+
+Функция определения модуля mod\+\_\+app.\+so. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em app\+\_\+register\+\_\+hooks} & Обработчики модуля. Данный модуль имеет стандартный вид и принимает только hooks параметры. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{mod__app_8cpp_a6592b770933d679355f806a9f4814268}\label{mod__app_8cpp_a6592b770933d679355f806a9f4814268}} 
+\index{mod\_app.cpp@{mod\_app.cpp}!app\_handler@{app\_handler}}
+\index{app\_handler@{app\_handler}!mod\_app.cpp@{mod\_app.cpp}}
+\doxysubsubsection{\texorpdfstring{app\_handler()}{app\_handler()}}
+{\footnotesize\ttfamily static int app\+\_\+handler (\begin{DoxyParamCaption}\item[{request\+\_\+rec $\ast$}]{r }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Определение функции обработчика HTTP-\/запросов. 
+
+Основной обработчик запросов Apache.
+
+
+\begin{DoxyParams}{Parameters}
+{\em $\ast$r} & Указатель на структуру, которая содержит распарсенные данные о HTTP-\/запросах.\\
+\hline
+\end{DoxyParams}
+Для того чтобы произвести авторизацию пользователя в системе нужно\+:
+
+проверить, что этот запрос обрабатывается модулем mod\+\_\+app.\+so;
+
+получить данные о POST-\/запросе в хэдере или теле запроса с кодировкой application/x-\/www-\/form-\/urlencoded;
+
+поменять URL кодировку на UTF-\/8 кодировку для формирования HTML страницы;
+
+убедиться, что время запроса не превосходит его продолжительности жизни;
+
+преобразовать пароль в хеш SHA256;
+
+сформировать SQL-\/запрос, который уже был проверен на наличие инъекций модулем mod\+\_\+appfilter.\+so \begin{DoxyReturn}{Returns}
+Код состояния OK в случае успеха, иначе HTTP\+\_\+\+INTERNAL\+\_\+\+SERVER\+\_\+\+ERROR. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{mod__app_8cpp_a834d21bce64c6d93e6e29ac2474055f6}\label{mod__app_8cpp_a834d21bce64c6d93e6e29ac2474055f6}} 
+\index{mod\_app.cpp@{mod\_app.cpp}!app\_post\_config@{app\_post\_config}}
+\index{app\_post\_config@{app\_post\_config}!mod\_app.cpp@{mod\_app.cpp}}
+\doxysubsubsection{\texorpdfstring{app\_post\_config()}{app\_post\_config()}}
+{\footnotesize\ttfamily static int app\+\_\+post\+\_\+config (\begin{DoxyParamCaption}\item[{apr\+\_\+pool\+\_\+t $\ast$}]{pconf,  }\item[{apr\+\_\+pool\+\_\+t $\ast$}]{plog,  }\item[{apr\+\_\+pool\+\_\+t $\ast$}]{ptemp,  }\item[{server\+\_\+rec $\ast$}]{s }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Функция получения статуса соединения с продолжительностью = времени жизни запроса. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em $\ast$pconf} & Указатель на пул памяти конфигурации. \\
+\hline
+{\em $\ast$plog} & Указатель на пул памяти логирования. \\
+\hline
+{\em $\ast$ptemp} & Указатель на временный пул памяти. \\
+\hline
+{\em $\ast$s} & Указатель на пул памяти, где лежит SQL запрос в виде хеша. Функция нужна будут в будущем для проверки работы сервера \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+OK 
+\end{DoxyReturn}
+\mbox{\Hypertarget{mod__app_8cpp_ab6c902d0877356c9f3553647225e6634}\label{mod__app_8cpp_ab6c902d0877356c9f3553647225e6634}} 
+\index{mod\_app.cpp@{mod\_app.cpp}!app\_register\_hooks@{app\_register\_hooks}}
+\index{app\_register\_hooks@{app\_register\_hooks}!mod\_app.cpp@{mod\_app.cpp}}
+\doxysubsubsection{\texorpdfstring{app\_register\_hooks()}{app\_register\_hooks()}}
+{\footnotesize\ttfamily static void app\+\_\+register\+\_\+hooks (\begin{DoxyParamCaption}\item[{apr\+\_\+pool\+\_\+t $\ast$}]{p }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Функция регистрации обработчиков модуля mod\+\_\+app.\+so. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em $\ast$p} & Указатель на пул памяти . Каждый модуль Apache отвечает на запросы сервера с помощью hook -\/ сообщения о том, будут он обрабатывать это запрос или отклонит его. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{mod__app_8cpp_a8143f87346b66b10cabd9b7a0c49fc30}\label{mod__app_8cpp_a8143f87346b66b10cabd9b7a0c49fc30}} 
+\index{mod\_app.cpp@{mod\_app.cpp}!APR\_OPTIONAL\_FN\_TYPE@{APR\_OPTIONAL\_FN\_TYPE}}
+\index{APR\_OPTIONAL\_FN\_TYPE@{APR\_OPTIONAL\_FN\_TYPE}!mod\_app.cpp@{mod\_app.cpp}}
+\doxysubsubsection{\texorpdfstring{APR\_OPTIONAL\_FN\_TYPE()}{APR\_OPTIONAL\_FN\_TYPE()}}
+{\footnotesize\ttfamily static APR\+\_\+\+OPTIONAL\+\_\+\+FN\+\_\+\+TYPE (\begin{DoxyParamCaption}\item[{ap\+\_\+dbd\+\_\+acquire}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Cтатическое определение типа данных опциональной библиотеки для работы с Postgresql. 
+
+\mbox{\Hypertarget{mod__app_8cpp_a34f83dde928ba927fe6b023ae6b37b82}\label{mod__app_8cpp_a34f83dde928ba927fe6b023ae6b37b82}} 
+\index{mod\_app.cpp@{mod\_app.cpp}!dbd\_select@{dbd\_select}}
+\index{dbd\_select@{dbd\_select}!mod\_app.cpp@{mod\_app.cpp}}
+\doxysubsubsection{\texorpdfstring{dbd\_select()}{dbd\_select()}}
+{\footnotesize\ttfamily apr\+\_\+status\+\_\+t dbd\+\_\+select (\begin{DoxyParamCaption}\item[{request\+\_\+rec $\ast$}]{r,  }\item[{ap\+\_\+dbd\+\_\+t $\ast$}]{dbd,  }\item[{apr\+\_\+dbd\+\_\+results\+\_\+t $\ast$$\ast$}]{res,  }\item[{const char $\ast$}]{sql }\end{DoxyParamCaption})}
+
+
+
+Функция отправки SQL-\/запроса в базу данных. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em $\ast$r} & Указатель на структуру, которая содержит информацию о HTTP-\/запросе. \\
+\hline
+{\em $\ast$dbd} & Указатель на структуру, которая содержит информацию о драйвере, обработчике (handler), пуле и хеше \\
+\hline
+{\em $\ast$$\ast$res} & Указатель на указатель на структуру для взаимодействия в Postgresql. \\
+\hline
+{\em $\ast$sql} & SQL запрос в виде массива из char. ~\newline
+ SQL является одним из стандартов работы с базами данных. Процесс имеет 3 стадии\+:\\
+\hline
+\end{DoxyParams}
+1 -\/ Компиляция
+
+2 -\/ Выполнение
+
+3 -\/ Чтение
+
+В данной функции происходят первые два этапа обработки SQL запроса -\/ подготовка и выполнение \begin{DoxyReturn}{Returns}
+Код состояния APR\+\_\+\+SUCCESS в случае успеха, иначе APR\+\_\+\+EGENERAL. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{mod__app_8cpp_a867ddf562411f02d27df8e5ed986df81}\label{mod__app_8cpp_a867ddf562411f02d27df8e5ed986df81}} 
+\index{mod\_app.cpp@{mod\_app.cpp}!get\_params@{get\_params}}
+\index{get\_params@{get\_params}!mod\_app.cpp@{mod\_app.cpp}}
+\doxysubsubsection{\texorpdfstring{get\_params()}{get\_params()}}
+{\footnotesize\ttfamily apr\+\_\+status\+\_\+t get\+\_\+params (\begin{DoxyParamCaption}\item[{request\+\_\+rec $\ast$}]{r,  }\item[{apr\+\_\+table\+\_\+t $\ast$}]{params }\end{DoxyParamCaption})}
+
+
+
+Функция парсинга. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em $\ast$r} & Указатель на структуру данных об HTTP-\/запросе. Тип структуры -\/ стандартный для Apache. \\
+\hline
+{\em $\ast$params} & Указатель на структуру данных об HTTP-\/запросе. Тип структуры -\/ Apache Portable Runtime таблица.\\
+\hline
+\end{DoxyParams}
+Сначала проверим наличие данных внутри входных параметров.
+
+Если запрос внутри стандартной структуры Apache пустой или пустой запрос внутри таблицы APR, то возвращаем ошибку.
+
+Данные URL-\/строки парсим с помощью стандартной функции apreq\+\_\+parse\+\_\+query\+\_\+string.
+
+Данные из тела POST-\/запроса, у которых Content-\/type = \char`\"{}application/x-\/www-\/ form-\/urlencoded\char`\"{} парсим построчно и добавляем в bucket brigade.
+
+Полученные данные порционно будем помещать в структуру типа Apache, а затем преобразуем в таблицу APR. \begin{DoxyReturn}{Returns}
+Код состояния APR\+\_\+\+SUCCESS в случае успеха, иначе APR\+\_\+\+EGENERAL. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{mod__app_8cpp_acabac405752166ddf1078798056270e7}\label{mod__app_8cpp_acabac405752166ddf1078798056270e7}} 
+\index{mod\_app.cpp@{mod\_app.cpp}!sha256@{sha256}}
+\index{sha256@{sha256}!mod\_app.cpp@{mod\_app.cpp}}
+\doxysubsubsection{\texorpdfstring{sha256()}{sha256()}}
+{\footnotesize\ttfamily apr\+\_\+status\+\_\+t sha256 (\begin{DoxyParamCaption}\item[{apr\+\_\+pool\+\_\+t $\ast$}]{pool,  }\item[{const char $\ast$}]{str,  }\item[{char $\ast$$\ast$}]{result }\end{DoxyParamCaption})}
+
+
+
+Функция преобразования пароля в хеш. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em $\ast$pool} & Указатель на пул памяти. \\
+\hline
+{\em $\ast$str} & Пароль в виде строки. \\
+\hline
+{\em $\ast$$\ast$result} & Результат -\/ хеш пароля. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Код состояния APR\+\_\+\+SUCCESS в случае успеха, иначе APR\+\_\+\+EGENERAL. 
+\end{DoxyReturn}

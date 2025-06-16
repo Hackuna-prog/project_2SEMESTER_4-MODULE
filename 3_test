@@ -1,0 +1,33 @@
+#!/bin/sh
+
+echo "-------------------------------"
+echo "Проверка аутентификации с корректным паролем"
+curl -f "http://127.0.0.1/app?user=admin&pass=VeryStrongSuperPassword"
+RETVAL=$?
+if [ $RETVAL -eq 0 ]; then
+  echo "Проверка пройдена - аутентификация успешна"
+else
+  exit 1
+fi
+
+echo "-------------------------------"
+echo "Проверка аутентификации с некорректным паролем"
+curl -f "http://127.0.0.1/app?user=admin&pass=12345"
+RETVAL=$?
+if [ $RETVAL -eq 0 ]; then
+  echo "Ошибка: аутентификация успешна"
+  exit 1
+else
+  echo "Проверка пройдена - аутентификация неуспешна"
+fi
+
+echo "-------------------------------"
+echo "Проверка аутентификации с SQL-инъекцией"
+curl -f "http://127.0.0.1/app?user=admin'--&pass=12345"
+RETVAL=$?
+if [ $RETVAL -eq 0 ]; then
+  echo "Результат: Аутентификация успешна (корректно если appfilter_enable false)"
+else
+  echo "Результат: Аутентификация неуспешна (корректно если appfilter_enable true)"
+fi
+echo "-------------------------------"
