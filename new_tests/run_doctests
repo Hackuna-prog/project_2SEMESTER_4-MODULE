@@ -1,0 +1,8 @@
+#!/bin/bash
+
+#dnf install apr-util-pgsql httpd-devel libapreq2-devel openssl-devel
+
+LIBS="-lapr-1 -laprutil-1 -lapreq2 -lcrypto"
+
+g++ $LIBS -I/usr/include/httpd -I/usr/include/openssl -I/usr/include/apr-1 -I/usr/include/apreq2 -I/doctest.h   -fpermissive -w -fPIC -DPIC -o my_tests my_tests.cpp sha256.cpp || exit $?
+./my_tests
